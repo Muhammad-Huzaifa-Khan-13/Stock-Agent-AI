@@ -5,7 +5,7 @@ from log.custom_logger import log
 
 
 def run_api(model, prompt, temperature: float = 0):
-    openai.api_key = ""
+    openai.api_key = os.getenv("OPENAI_API_KEY", "")
     client = openai.OpenAI(api_key=openai.api_key)
     response = client.chat.completions.create(
         model=model,
@@ -35,15 +35,17 @@ class Secretary:
 
     def check_loan(self, resp, max_loan) -> (bool, str, dict):
         # format check
-        if isinstance(resp, str) and resp.count('{') == 1 and resp.count('}') == 1:
-            start_idx = resp.index('{')
-            end_idx = resp.index('}')
+        if isinstance(resp, str) and resp.count("{") == 1 and resp.count("}") == 1:
+            start_idx = resp.index("{")
+            end_idx = resp.index("}")
         else:
             log.logger.debug("Wrong json content in response: {}".format(resp))
-            fail_response = "Wrong json format, there is no {} or more than one {} in response."
+            fail_response = (
+                "Wrong json format, there is no {} or more than one {} in response."
+            )
             return False, fail_response, None
 
-        action_json = resp[start_idx: end_idx + 1]
+        action_json = resp[start_idx : end_idx + 1]
         action_json = action_json.replace("\n", "").replace(" ", "")
         try:
             parsed_json = json.loads(action_json)
@@ -94,18 +96,21 @@ class Secretary:
             log.logger.error("UNSOLVED LOAN JSON RESPONSE:{}".format(parsed_json))
             return False, "", None
 
-    def check_action(self, resp, cash, stock_a_amount,
-                     stock_b_amount, stock_a_price, stock_b_price) -> (bool, str, dict):
+    def check_action(
+        self, resp, cash, stock_a_amount, stock_b_amount, stock_a_price, stock_b_price
+    ) -> (bool, str, dict):
         # format check
-        if isinstance(resp, str) and resp.count('{') == 1 and resp.count('}') == 1:
-            start_idx = resp.index('{')
-            end_idx = resp.index('}')
+        if isinstance(resp, str) and resp.count("{") == 1 and resp.count("}") == 1:
+            start_idx = resp.index("{")
+            end_idx = resp.index("}")
         else:
             log.logger.debug("Wrong json content in response: {}".format(resp))
-            fail_response = "Wrong json format, there is no {} or more than one {} in response."
+            fail_response = (
+                "Wrong json format, there is no {} or more than one {} in response."
+            )
             return False, fail_response, None
 
-        action_json = resp[start_idx: end_idx + 1]
+        action_json = resp[start_idx : end_idx + 1]
         action_json = action_json.replace("\n", "").replace(" ", "")
         try:
             parsed_json = json.loads(action_json)
@@ -126,7 +131,9 @@ class Secretary:
 
             if parsed_json["action_type"].lower() not in ["buy", "sell", "no"]:
                 log.logger.debug("Wrong json content in response: {}".format(resp))
-                fail_response = "Value of key 'action_type' should be 'buy', 'sell' or 'no'."
+                fail_response = (
+                    "Value of key 'action_type' should be 'buy', 'sell' or 'no'."
+                )
                 return False, fail_response, None
 
             if parsed_json["action_type"].lower() == "no":
@@ -137,12 +144,18 @@ class Secretary:
                 else:
                     return True, "", parsed_json
             else:
-                if "stock" not in parsed_json or "amount" not in parsed_json or "price" not in parsed_json:
+                if (
+                    "stock" not in parsed_json
+                    or "amount" not in parsed_json
+                    or "price" not in parsed_json
+                ):
                     log.logger.debug("Wrong json content in response: {}".format(resp))
-                    fail_response = "Should include stock, amount and price in response " \
-                                    "if value of key 'action_type' is buy or sell."
+                    fail_response = (
+                        "Should include stock, amount and price in response "
+                        "if value of key 'action_type' is buy or sell."
+                    )
                     return False, fail_response, None
-                if parsed_json["stock"] not in ['A', 'B']:
+                if parsed_json["stock"] not in ["A", "B"]:
                     log.logger.debug("Wrong json content in response: {}".format(resp))
                     fail_response = "Value of key 'stock' should be 'A' or 'B'."
                     return False, fail_response, None
@@ -159,20 +172,30 @@ class Secretary:
                 # price = prices[parsed_json["stock"]]
                 price = parsed_json["price"]
                 if parsed_json["action_type"].lower() == "buy":
-                    if parsed_json["amount"] <= 0 or parsed_json["amount"] * price > cash:
+                    if (
+                        parsed_json["amount"] <= 0
+                        or parsed_json["amount"] * price > cash
+                    ):
                         log.logger.debug("Buy more than cash: {}".format(resp))
-                        fail_response = f"The cash you have now is {cash}, " \
-                                        f"the value of 'amount' * 'price'  " \
-                                        f"should be positive and not exceed cash."
+                        fail_response = (
+                            f"The cash you have now is {cash}, "
+                            f"the value of 'amount' * 'price'  "
+                            f"should be positive and not exceed cash."
+                        )
                         return False, fail_response, None
 
                 hold_amount = holds[parsed_json["stock"]]
                 if parsed_json["action_type"].lower() == "sell":
-                    if parsed_json["amount"] <= 0 or parsed_json["amount"] > hold_amount:
+                    if (
+                        parsed_json["amount"] <= 0
+                        or parsed_json["amount"] > hold_amount
+                    ):
                         log.logger.debug("Sell more than hold: {}".format(resp))
-                        fail_response = f"The amount of stock you hold is {hold_amount}, " \
-                                        f"the value of 'amount' should be positive and not exceed the " \
-                                        f"amount of stock you hold."
+                        fail_response = (
+                            f"The amount of stock you hold is {hold_amount}, "
+                            f"the value of 'amount' should be positive and not exceed the "
+                            f"amount of stock you hold."
+                        )
                         return False, fail_response, None
                 return True, "", parsed_json
 
@@ -182,15 +205,17 @@ class Secretary:
 
     def check_estimate(self, resp):
         # format check
-        if isinstance(resp, str) and resp.count('{') == 1 and resp.count('}') == 1:
-            start_idx = resp.index('{')
-            end_idx = resp.index('}')
+        if isinstance(resp, str) and resp.count("{") == 1 and resp.count("}") == 1:
+            start_idx = resp.index("{")
+            end_idx = resp.index("}")
         else:
             log.logger.debug("Wrong json content in response: {}".format(resp))
-            fail_response = "Wrong json format, there is no {} or more than one {} in response."
+            fail_response = (
+                "Wrong json format, there is no {} or more than one {} in response."
+            )
             return False, fail_response, None
 
-        action_json = resp[start_idx: end_idx + 1]
+        action_json = resp[start_idx : end_idx + 1]
         action_json = action_json.replace("\n", "").replace(" ", "")
         try:
             parsed_json = json.loads(action_json)
@@ -202,15 +227,19 @@ class Secretary:
 
         # content check
         try:
-            if "buy_A" not in parsed_json or "buy_B" not in parsed_json \
-                    or "sell_A" not in parsed_json or "sell_B" not in parsed_json \
-                    or "loan" not in parsed_json:
+            if (
+                "buy_A" not in parsed_json
+                or "buy_B" not in parsed_json
+                or "sell_A" not in parsed_json
+                or "sell_B" not in parsed_json
+                or "loan" not in parsed_json
+            ):
                 log.logger.debug("Wrong json content in response: {}".format(resp))
                 fail_response = "Key 'buy_A', 'buy_B', 'sell_A', 'sell_B' and 'loan' should in response."
                 return False, fail_response, None
 
             for key, item in parsed_json.items():
-                if item not in ['yes', 'no']:
+                if item not in ["yes", "no"]:
                     log.logger.debug("Wrong json content in response: {}".format(resp))
                     fail_response = "Value of all keys should be 'yes' or 'no'."
                     return False, fail_response, None

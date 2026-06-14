@@ -16,18 +16,26 @@ The Workflow of Trading Simulation Flow. There are four Phases, namely **Initial
 
 #### Environment
 
+Windows PowerShell:
+
 ```
-conda create --name stockagent python=3.9
-conda activate stockagent
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements.txt
+python -m pip install -e external/PromptCoder
+```
 
-git clone https://github.com/dhh1995/PromptCoder
-cd PromptCoder
-pip install -e .
-cd ..
+WSL / Ubuntu:
 
-git clone <This Github Project>
-cd Stockagent
-pip install -r requirements.txt
+```
+sudo apt update
+sudo apt install python3.12-venv python3-pip
+python3 -m venv .venv-wsl
+source .venv-wsl/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements.txt
+python -m pip install -e external/PromptCoder
 ```
 
 #### API keys
@@ -68,5 +76,4 @@ If you find the code is valuable, please use this citation.
   year={2024}
 }
 ```
-
 

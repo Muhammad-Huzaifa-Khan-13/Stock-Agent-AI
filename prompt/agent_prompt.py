@@ -14,7 +14,7 @@ BACKGROUND_PROMPT = NamedBlock(
         You are a stock trader, and next you will simulate interactions with other traders in the market.
         There are two stocks in the market, A and B, where B is the newly listed stock. 
         Next, please complete your trading actions according to the order.
-    """
+    """,
 )
 
 # LASTDAY_FORUM_AND_STOCK_PROMPT = NamedBlock(
@@ -32,7 +32,7 @@ LASTDAY_FORUM_AND_STOCK_PROMPT = NamedBlock(
         After the close of trading yesterday, the stock prices of Company A and Company B 
         were {stock_a_price} dollars per share and {stock_b_price} dollars per share, respectively. 
         Posts by other traders on the forum are as follows: {lastday_forum_message}
-    """
+    """,
 )
 
 # LOAN_TYPE_PROMPT = NamedVariable(
@@ -52,7 +52,7 @@ LOAN_TYPE_PROMPT = NamedVariable(
     0. 22days, the benchmark interest rate {loan_rate1}
     1. 44days, the benchmark interest rate {loan_rate2}
     2. 66days, the benchmark interest rate {loan_rate3}
-    """
+    """,
 )
 
 # DECIDE_IF_LOAN_PROMPT = NamedBlock(
@@ -84,7 +84,7 @@ DECIDE_IF_LOAN_PROMPT = NamedBlock(
 
     If no loan is required, return:
     {{"loan" : "no"}}
-    """
+    """,
 )
 
 # LOAN_RETRY_PROMPT = NamedBlock(
@@ -106,7 +106,7 @@ LOAN_RETRY_PROMPT = NamedBlock(
     {{"loan": "yes", "loan_type": 2, "amount": 1000}}
     If no loan is required, return:
     {{"loan" : "no"}}
-    Please answer again."""
+    Please answer again.""",
 )
 
 # DECIDE_BUY_STOCK_PROMPT = NamedBlock(
@@ -139,7 +139,7 @@ DECIDE_BUY_STOCK_PROMPT = NamedBlock(
     {{"action_type":"buy"|"sell", "stock":"A"|"B", amount: 100, price : 30.1}}
     If neither buy nor sell, return:
     {{"action_type" : "no"}}
-    """
+    """,
 )
 
 # BUY_STOCK_RETRY_PROMPT = NamedBlock(
@@ -162,7 +162,7 @@ BUY_STOCK_RETRY_PROMPT = NamedBlock(
     If neither buy nor sell, return:
     {{"action_type" : "no"}}
     Please answer again. You can only answer one json action.
-    """
+    """,
 )
 
 # FIRST_DAY_FINANCIAL_REPORT = NamedVariable(
@@ -186,7 +186,7 @@ FIRST_DAY_FINANCIAL_REPORT = NamedVariable(
     Revenue million: 570.00, 774.00, 643.00, 995.00, 684.46, 934.37, 782.08, 1204.05, 788.29, 1100.32, 914.96, 1418.37
     Net profit million: 85.9691, 142.086, 87.5419224, 135.7643678, 132.7973368, 169.6505746, 194.9436163, 272.1084953, 225.1707811, 356.7201332
     Cash flow million: 68.97, 90.171, 82.1754, 124.773, 75.4954968, 123.5240842, 132.7191287, 153.7571212, 194.9436163, 261.1053212, 216.3871992, 345.6568448
-    """
+    """,
 )
 
 FIRST_DAY_BACKGROUND_KNOWLEDGE = NamedBlock(
@@ -212,7 +212,7 @@ FIRST_DAY_BACKGROUND_KNOWLEDGE = NamedBlock(
     to society. Subsequently, agreements on government subsidies were signed with both companies. 
     
     The last 3 years financial report of stock A and B is listed in {first_day_financial_prompt}.
-    """
+    """,
 )
 
 # SEASONAL_FINANCIAL_REPORT = NamedVariable(
@@ -230,7 +230,7 @@ SEASONAL_FINANCIAL_REPORT = NamedVariable(
     content="""
         Stock A: {stock_a_report}
         Stock B: {stock_b_report}
-    """
+    """,
 )
 
 # POST_MESSAGE_PROMPT = NamedBlock(
@@ -246,7 +246,7 @@ POST_MESSAGE_PROMPT = NamedBlock(
     content="""
     The current trading day is over, please briefly post your trading tips on the forum and post them on the forum.
     What you post will be publicly visible to all traders. The responses contain only what needs to be posted.
-    """
+    """,
 )
 
 # NEXT_DAY_ESTIMATE_PROMPT = NamedBlock(
@@ -268,7 +268,7 @@ NEXT_DAY_ESTIMATE_PROMPT = NamedBlock(
     Actions that are expected to take place are marked yes, and actions that will not take place are marked no. 
     Return the result in json format, for example:
     {{"buy_A":"yes", "buy_B":"no", "sell_A":"yes", "sell_B": "no", "loan": "yes"}}
-    """
+    """,
 )
 
 # NEXT_DAY_ESTIMATE_RETRY = NamedBlock(
@@ -288,5 +288,5 @@ NEXT_DAY_ESTIMATE_RETRY = NamedBlock(
     The following questions appeared in the JSON format you last answered: {fail_response}.
     Return the result in json format, for example:
     {{"buy_A":"yes", "buy_B":"no", "sell_A":"yes", "sell_B": "no", "loan": "yes"}}
-    """
+    """,
 )

@@ -1,0 +1,8 @@
+.venv/
+.venv-wsl/
+external/
+__pycache__/
+*.py[cod]
+log/test.txt
+res/*
+!res/.gitkeep
